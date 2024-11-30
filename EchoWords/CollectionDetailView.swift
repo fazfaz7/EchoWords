@@ -18,7 +18,7 @@ struct CollectionDetailView: View {
             HStack {
                 VStack(alignment: .leading) {
                     VStack(alignment: .leading) {
-                        Text("New Phrase")
+                        Text(phrase.learnType == .newPhrase ? "New Phrase" : "How to Say?...")
                             .foregroundStyle(.accent)
                             .font(.title3)
                             
