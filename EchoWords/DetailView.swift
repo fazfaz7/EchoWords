@@ -10,7 +10,9 @@ import SwiftUI
 struct DetailView: View {
     @ObservedObject var phrase: LearnElement
     @Environment(\.modelContext) var modelContext
+    @State private var selectedName: String? = nil
     @Environment(\.dismiss) var dismiss
+    var people: [FriendHelper] = [FriendHelper(name: "Gaia", imagePicture: "Gaia"), FriendHelper(name: "Elena", imagePicture: "Elena"), FriendHelper(name: "Vincenzo", imagePicture: "Vincenzo")]
     var body: some View {
         VStack(spacing: 15) {
             HStack {
@@ -43,6 +45,72 @@ struct DetailView: View {
 
                 
                 
+
+               
+                Text("Who helped you solve your doubt?")
+                    .foregroundStyle(.green2)
+                    .fontWeight(.medium)
+                    
+                ScrollView(.horizontal) {
+                    HStack(spacing: 10) {
+                        
+                        ForEach(people, id: \.id) { person in
+                            VStack {
+                                Image(person.name)
+                                    .resizable()
+                                    .scaledToFit()
+                                    .clipShape(Circle()
+                                        )
+                                    .frame(width: 80, height: 80)
+                               
+                                
+                                Text(person.name)
+                                    .lineLimit(1)
+                                    .frame(width: 100, height: 20)
+                                    .multilineTextAlignment(.center)
+                            }
+                            .padding()
+                            .frame(width: 110)
+                            .background(
+                                RoundedRectangle(cornerRadius: 20)
+                                    .fill(Color.green1.opacity(person.name == selectedName ? 1 : 0.4))
+                            )
+                            .onTapGesture {
+                                withAnimation {         selectedName = person.name
+                                }           }
+                            
+                            
+                        }
+                        
+                        VStack {
+                            Image(systemName: "plus.circle")
+                                .foregroundStyle(.white)
+                                .font(.largeTitle)
+                            
+                            Text("Add Person")
+                                .foregroundStyle(.white)
+                                .multilineTextAlignment(.center)
+                                .padding(4)
+                                
+                           
+                            
+   
+                        }
+                        .padding()
+                        .frame(width: 110, height: 140)
+                        .background(
+                            RoundedRectangle(cornerRadius: 20)
+                                .fill(Color.green1.opacity(1))
+                        )
+                      
+ 
+                        
+               
+
+                    }
+                }
+
+                
                 HStack {
                                     Spacer() // Add a spacer before and after
                                     Button {
@@ -66,8 +134,7 @@ struct DetailView: View {
                                 }
                
             }
-            
-            
+
 
             Spacer()
             
@@ -78,3 +145,4 @@ struct DetailView: View {
 #Preview {
     DetailView(phrase: LearnElement(learnType: .newPhrase, userEntry: "Tuttavia", explanation: ""))
 }
+

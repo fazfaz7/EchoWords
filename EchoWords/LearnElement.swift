@@ -21,6 +21,7 @@ class LearnElement: ObservableObject {
     var explanation: String
     var dateAdded: Date
     var isCompleted: Bool = false
+    var friendHelper: FriendHelper?
     
     init(learnType: elementType = .newPhrase, userEntry: String = "", explanation: String = "") {
         self.learnType = learnType
@@ -28,5 +29,12 @@ class LearnElement: ObservableObject {
         self.explanation = explanation
         self.dateAdded = .now
     }
+}
+
+struct FriendHelper: Codable {
+    var id = UUID()
+    var name: String
+    var imagePicture: String
+    var helpCount: Int = 0
 }
 
