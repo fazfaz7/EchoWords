@@ -88,7 +88,7 @@ struct CollectionView: View {
                                     NavigationLink {
                                         CollectionDetailView(phrase: phrase)
                                     } label: {
-                                        WordElementView(phrase: phrase.userEntry, date: phrase.dateAdded)
+                                        WordElementView(phrase: phrase, isCollection: true)
                                     }
                                 }
                             }

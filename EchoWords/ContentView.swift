@@ -41,11 +41,6 @@ struct ContentView: View {
  
 
                 Button {
-                    do {
-                       try modelContext.delete(model: LearnElement.self)
-                    } catch {
-                        print("Error borrando")
-                    }
                     
                 } label: {
                     Circle()
@@ -135,12 +130,7 @@ struct ContentView: View {
                     VStack(spacing: 15) {
                         ForEach(testPhrases, id: \.self) { phrase in
                             
-                            NavigationLink {
-                                DetailView(phrase: phrase)
-                            } label: {
-                                WordElementView(phrase: phrase.userEntry, date: phrase.dateAdded)
-                            }
-                            
+                            WordElementView(phrase: phrase, isCollection: false)
                             
                         }
                         
@@ -158,7 +148,6 @@ struct ContentView: View {
             
 Spacer()
         }
-        .padding()
         .sheet(isPresented: $showNewPhrase) {
             NewPhraseView(newPhraseText: $newPhraseText, showNewPhrase: $showNewPhrase, phrases: $phrases, newType: $newType)
             
@@ -174,25 +163,53 @@ Spacer()
 
 
 
+
 struct WordElementView: View {
-    var phrase: String
-    var date: Date
+    var phrase: LearnElement
+    var isCollection: Bool = false
+    @Environment(\.modelContext) var modelContext
     var body: some View {
         HStack {
-            Text(phrase)
+            Text(phrase.userEntry)
                 .foregroundStyle(.black)
             
             Spacer()
             
-            Image(systemName: "arrow.right.circle")
-                .font(.title2)
-                .foregroundStyle(.green2)
+            if !isCollection {
+                NavigationLink {
+                                  DetailView(phrase: phrase)
+                              } label: {
+                                  Image(systemName: "checkmark.circle.fill")
+                                      .font(.title2)
+                                      .foregroundStyle(.green2)
+                              }
+                             
+                              
+                Button {
+                    withAnimation {
+                                        modelContext.delete(phrase)
+                                        do {
+                                            try modelContext.save() // Ensure the changes are saved
+                                        } catch {
+                                            print("Error deleting element: \(error)")
+                                        }
+                                    }
+                } label: {
+                    Image(systemName: "trash.fill")
+                        .font(.title3)
+                        .foregroundStyle(.red)
+                        .opacity(0.6)
+                        .padding(.horizontal,4)
+                }
+            }
+            
         }
         .padding()
         .frame(width: Global.screenWidth*0.85, height: Global.screenHeight*0.08)
         .background(RoundedRectangle(cornerRadius: 10).fill(Color.gray.opacity(0.1)).shadow(radius:1))
     }
 }
+
 
 struct NewPhraseView: View {
     @Binding var newPhraseText: String
